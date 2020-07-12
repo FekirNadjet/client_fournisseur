@@ -37,7 +37,6 @@ class Produit(models.Model):
     prix = models.FloatField(default=0)
     fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE, blank=True, null=True,
                                     related_name='products')
-
     def __str__(self):
         return self.designation
 
@@ -54,7 +53,7 @@ class Facture(models.Model):
 
 
 class LigneFacture(models.Model):
-    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE,related_name='facture')
     qte = models.IntegerField(default=1)
     facture = models.ForeignKey(
         Facture, on_delete=models.CASCADE, related_name='lignes')

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'bootstrap_datepicker_plus',
+    'jchart',
 
 ]
 
