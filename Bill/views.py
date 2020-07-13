@@ -9,6 +9,8 @@ from django.views.generic import ListView, UpdateView, DeleteView, DetailView, C
 import django_tables2 as tables
 from django_tables2 import MultiTableMixin
 from django_tables2.config import RequestConfig
+from jchart import Chart
+
 from Bill.models import Facture, Client, Fournisseur, LigneFacture, Produit
 
 
@@ -20,7 +22,6 @@ def facture_detail_view(request, pk):
     context = {}
     context['facture'] = facture
     return render(request, 'bill/facture_detail.html', context)
-
 
 
 ##################################################     Clients     ##############################################
@@ -52,6 +53,7 @@ class ClientsView(ListView):
         RequestConfig(self.request, paginate={"per_page": 10}).configure(table)
         context['table'] = table
         return context
+
 
 class FactureListTable(tables.Table):
     action = '<a href="{% url "facture_table_detail" pk=record.id %}" class="btn btn-danger">Liste Lignes</a>'
@@ -134,8 +136,6 @@ class ClientFacturesListView(DetailView):
         return context
 
 
-
-
 ##################################################     Facture     ##############################################
 
 
@@ -157,6 +157,7 @@ class FactureCreateView(CreateView):
         self.success_url = reverse('client_factures_list', kwargs={'pk': self.kwargs.get('client_pk')})
         return form
 
+
 ##################################################     Fournisseur    ##############################################
 
 
@@ -170,8 +171,6 @@ class FournisseurTable(tables.Table):
         model = Fournisseur
         template_name = "django_tables2/bootstrap4.html"
         fields = ('nom', 'prenom', 'adresse', 'tel')
-
-
 
 
 class FournisseursView(ListView):
@@ -209,6 +208,7 @@ class FournisseurDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('fournisseur_table')
+
 
 class FournisseurCreateView(CreateView):
     model = Fournisseur
@@ -292,6 +292,7 @@ class FactureDetailView(DetailView):
         context['table'] = table
         return context
 
+
 ##################################################     Chiffre d'affaire     ##############################################
 
 
@@ -299,7 +300,7 @@ class CAClientTable(tables.Table):
     class Meta:
         model = Client
         template_name = "django_tables2/bootstrap4.html"
-        fields = ('chiffre_affaire','nom', 'prenom' )
+        fields = ('chiffre_affaire', 'nom', 'prenom')
 
 
 class CAFournisseurTable(tables.Table):
@@ -320,15 +321,17 @@ class DashboardTables(MultiTableMixin, TemplateView):
             ExpressionWrapper(F('products__facture__qte'), output_field=FloatField()) * F(
                 'products__prix')))
 
-        qs2= Client.objects.values('nom', 'prenom').annotate(chiffre_affaire=Sum(
+        qs2 = Client.objects.values('nom', 'prenom').annotate(chiffre_affaire=Sum(
             ExpressionWrapper(F('facture__lignes__qte'), output_field=FloatField()) * F(
                 'facture__lignes__produit__prix'))).order_by('-chiffre_affaire')
         return [
             CAClientTable(qs2),
-            CAFournisseurTable(qs1)
-
+            CAFournisseurTable(qs1),
         ]
 
-
-
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["qs"] = Fournisseur.objects.values('nom', 'prenom', 'adresse').annotate(chiffre_affaire=Sum(
+            ExpressionWrapper(F('products__facture__qte'), output_field=FloatField()) * F(
+                'products__prix')))
+        return context

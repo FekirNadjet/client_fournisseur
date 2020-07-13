@@ -5,54 +5,88 @@
         {% load bootstrap4 django_tables2 %}
         {% bootstrap_css %} {# Embed Bootstrap CSS #}
         {% bootstrap_javascript jquery='full' %} {# Embed Bootstrap JS+jQuery #}
+          <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- semantic UI -->
+    <link rel="stylesheet" type='text/css' href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.css">
+    <!--Chart js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
     </head>
     <body>
-
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-        <a class="nav-link" href="#">Dashboard</a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url 'clients_table'  %}">Clients <span class="sr-only">(current)</span></a>
-      </li>
-
-        <li class="nav-item active">
-        <a class="nav-link" href="{% url 'fournisseur_table' %}">Fournisseurs <span class="sr-only">(current)</span></a>
-      </li>
-         </li>
-
-        <li class="nav-item active">
-        <a class="nav-link" href="{% url 'facture_list' %}">Factures <span class="sr-only">(current)</span></a>
-      </li>
-
-
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
-
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Dashboard</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{% url 'clients_table'  %}">Clients <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{% url 'fournisseur_table' %}">Fournisseurs <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{% url 'facture_list' %}">Factures <span class="sr-only">(current)</span></a>
+                            </li>
+                        </ul>
+                        <form class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                    </div>
+        </nav>
 
         <div class="container">
-
-
-                    <div class="row">
-                        {% for table in tables %}
-                
-                        
+            <div class="row">
+                {% for table in tables %}
                         <div class="col-md-6">
                             {% render_table table %}
                         </div>
                         {% endfor %}
+            </div>
+            {% block scripts %}
+                <script>
+                    $(document).ready(function(){
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: [{% for item in qs %}'{{item.prenom}}',{% endfor %}],
+                                datasets: [{
+                                    label: '# chiffre affaire par fournisseur',
+                                    data: [{% for item in qs %} {{item.chiffre_affaire}},{% endfor %}],
+                                    backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
 
-                    </div>
-                
-            
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                    });
+                </script>
+            {% endblock scripts %}
+            {% block content %}
+                <canvas id="myChart" width="400" height="100"></canvas>
+            {% endblock content %}
         </div>
     </body>
 </html>
