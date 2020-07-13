@@ -82,7 +82,7 @@ class FacturesView(ListView):
 class ClientUpdateView(UpdateView):
     model = Client
     fields = ['nom', 'prenom', 'sexe', 'adresse', 'tel']
-    template_name = 'bill/client_update.html'
+    template_name = 'bill/update.html'
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -95,7 +95,7 @@ class ClientUpdateView(UpdateView):
 
 class ClientDeleteView(DeleteView):
     model = Client
-    template_name = 'bill/client_delete.html'
+    template_name = 'bill/delete.html'
 
     def get_success_url(self):
         return reverse('clients_table')
@@ -103,7 +103,7 @@ class ClientDeleteView(DeleteView):
 
 class ClientCreateView(CreateView):
     model = Client
-    template_name = 'bill/create_client.html'
+    template_name = 'bill/create.html'
     fields = ['id', 'nom', 'prenom', 'sexe', 'adresse', 'tel']
 
     def get_form(self, form_class=None):
@@ -141,7 +141,7 @@ class ClientFacturesListView(DetailView):
 
 class FactureCreateView(CreateView):
     model = Facture
-    template_name = 'bill/create_facture.html'
+    template_name = 'bill/create.html'
     fields = ['client', 'date']
 
     def get_form(self, form_class=None):
@@ -190,7 +190,7 @@ class FournisseursView(ListView):
 class FournisseurUpdateView(UpdateView):
     model = Fournisseur
     fields = ['nom', 'prenom', 'adresse', 'tel']
-    template_name = 'bill/fournisseur_update.html'
+    template_name = 'bill/update.html'
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -204,7 +204,7 @@ class FournisseurUpdateView(UpdateView):
 class FournisseurDeleteView(DeleteView):
     model = Fournisseur
     fields = ['nom', 'prenom', 'adresse', 'tel']
-    template_name = 'bill/fournisseur_delete.html'
+    template_name = 'bill/delete.html'
 
     def get_success_url(self):
         return reverse('fournisseur_table')
@@ -212,7 +212,7 @@ class FournisseurDeleteView(DeleteView):
 
 class FournisseurCreateView(CreateView):
     model = Fournisseur
-    template_name = 'bill/create_fournisseur.html'
+    template_name = 'bill/create.html'
     fields = ['nom', 'prenom', 'adresse', 'tel']
 
     def get_form(self, form_class=None):

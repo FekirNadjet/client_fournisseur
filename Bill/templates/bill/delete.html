@@ -8,10 +8,10 @@
     
   </head>
   <body>
-  <h2>Suppression d'une ligne facture</h2>
+  <h2>Suppression d'un item</h2>
     <br>
 	<form method="post">{% csrf_token %}
-    <p>Confirmez-vous la suppression de {{ object }} ?</p>
+    <p>Confirmez-vous la suppression  ?</p>
     <button type="submit" class="btn btn-danger">Confirmer</button>
     <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Annuler</a>
 	</form>
