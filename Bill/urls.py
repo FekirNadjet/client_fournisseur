@@ -3,8 +3,9 @@ from Bill import views
 urlpatterns = [
     re_path(r'^facture_detail/(?P<pk>\d+)/$',
             views.facture_detail_view, name='facture_detail'),
-    re_path(r'^clients_table/$', views.ClientsView.as_view(),
-            name='clients_table'),
+
+    re_path(r'^clients_table/$', views.ClientsView.as_view(),name='clients_table'),
+
     re_path(r'^update_client/(?P<pk>\d+)/$', views.ClientUpdateView.as_view(),
             name='client_update'),
     re_path(r'^delete_client/(?P<pk>\d+)/$', views.ClientDeleteView.as_view(),

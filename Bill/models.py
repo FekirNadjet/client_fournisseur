@@ -31,10 +31,16 @@ class Fournisseur(models.Model):
     def __str__(self):
         return self.nom + ' ' + self.prenom
 
+class Category(models.Model):
+    nom= models.CharField(max_length=120)
+
+    def __str__(self):
+        return self.nom
 
 class Produit(models.Model):
     designation = models.CharField(max_length=50)
     prix = models.FloatField(default=0)
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
     fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE, blank=True, null=True,
                                     related_name='products')
     def __str__(self):
